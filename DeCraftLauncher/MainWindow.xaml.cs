@@ -123,7 +123,7 @@ namespace DeCraftLauncher
                 }
                 jvmargs.Text = currentlySelectedJar.jvmArgs;
                 tbox_instance_dir.Text = tbox_server_instance_dir.Text = currentlySelectedJar.instanceDirName;
-                tbox_proxyhost.Text = tbox_server_proxyhost.Text = currentlySelectedJar.proxyHost;
+                tbox_server_ip.Text = tbox_server_iip.Text = currentlySelectedJar.server_ip;
 
                 panel_launch_client_options.Visibility = !currentlySelectedJar.isServer ? Visibility.Visible : Visibility.Collapsed;
                 panel_launch_server_options.Visibility = currentlySelectedJar.isServer ? Visibility.Visible : Visibility.Collapsed;
@@ -310,12 +310,12 @@ namespace DeCraftLauncher
                 window_height,
                 tbox_playername,
                 tbox_instance_dir,
-                tbox_proxyhost
+                tbox_server_ip
             };
 
             if (Util.RunningOnWine())
             {
-                PopupOK.ShowNewPopup("You may be running DECRAFT on the Wine compatibility layer.\nIf the launcher crashes after this popup, open \"winecfg\" and set your Windows version to Windows 7.\nDECRAFT can only use Windows versions of Java, so be sure to install one into your Wine prefix.\n\nGood luck, and expect bugs.", "DECRAFT");
+                PopupOK.ShowNewPopup("You may be running Yourcraft Launcher on the Wine compatibility layer.\nIf the launcher crashes after this popup, open \"winecfg\" and set your Windows version to Windows 7.\nYourcraft Launcher can only use Windows versions of Java, so be sure to install one into your Wine prefix.\n\nGood luck, and expect bugs.", "Yourcraft Launcher");
             }
         }
 
@@ -431,7 +431,7 @@ namespace DeCraftLauncher
                 conf.SaveToXMLDefault();
                 Dispatcher.Invoke(delegate
                 {
-                    PopupOK.ShowNewPopup($"Error analyzing {param.jar}: {e.Message}\n\nThe jar file must be a valid zip archive.", "DECRAFT");
+                    PopupOK.ShowNewPopup($"Error analyzing {param.jar}: {e.Message}\n\nThe jar file must be a valid zip archive.", "Yourcraft Launcher");
                 });
                 if (currentlySelectedJar.jarFileName == param.jar)
                 {
@@ -457,7 +457,7 @@ namespace DeCraftLauncher
                             string copyName = $"{jarDir}/{new FileInfo(a).Name}";
                             if (!File.Exists(copyName)
                                 || (File.Exists(copyName)
-                                    && PopupYesNo.ShowNewPopup($"{copyName} already exists. Overwrite?", "DECRAFT") == MessageBoxResult.Yes))
+                                    && PopupYesNo.ShowNewPopup($"{copyName} already exists. Overwrite?", "Yourcraft Launcher") == MessageBoxResult.Yes))
                             {
                                 File.Copy(a, copyName, true);
                             }
@@ -467,7 +467,7 @@ namespace DeCraftLauncher
                             string copyName = $"{jarDir}/{new FileInfo(a).Name}.jar";
                             if (!Util.TryExtractPKFromExe(a, copyName))
                             {
-                                PopupOK.ShowNewPopup($"Failed to extract jar from executable.", "DECRAFT");
+                                PopupOK.ShowNewPopup($"Failed to extract jar from executable.", "Yourcraft Launcher");
                             }
                         }
                         else if (a.EndsWith(".json"))
@@ -480,7 +480,7 @@ namespace DeCraftLauncher
                                 JObject dlElement = rootObj.SelectToken("downloads").Value<JObject>().SelectToken("client").Value<JObject>();
                                 if (!currentJarDownloads.Contains($"{versionID}.jar"))
                                 {
-                                    if (PopupYesNo.ShowNewPopup($"Download {Util.CleanStringForXAML(versionID)}?\n\n Size: {dlElement.SelectToken("size").Value<UInt64>()}\n URL: {dlElement.SelectToken("url").Value<string>()}", "DECRAFT") == MessageBoxResult.Yes)
+                                    if (PopupYesNo.ShowNewPopup($"Download {Util.CleanStringForXAML(versionID)}?\n\n Size: {dlElement.SelectToken("size").Value<UInt64>()}\n URL: {dlElement.SelectToken("url").Value<string>()}", "Yourcraft Launcher") == MessageBoxResult.Yes)
                                     {
                                         using (var client = new WebClient())
                                         {
@@ -495,11 +495,11 @@ namespace DeCraftLauncher
                                                     {
                                                         errorString += "\n\nYour system's SSL certificates may have expired.";
                                                     }
-                                                    PopupOK.ShowNewPopup(errorString, "DECRAFT");
+                                                    PopupOK.ShowNewPopup(errorString, "Yourcraft Launcher");
                                                 }
                                                 else
                                                 {
-                                                    PopupOK.ShowNewPopup("Download complete", "DECRAFT");
+                                                    PopupOK.ShowNewPopup("Download complete", "Yourcraft Launcher");
                                                     ResetJarlist();
                                                 }
                                             };
@@ -509,16 +509,16 @@ namespace DeCraftLauncher
                                     }
                                 } else
                                 {
-                                    PopupOK.ShowNewPopup($"{Util.CleanStringForXAML(versionID)} is currently being downloaded.", "DECRAFT");
+                                    PopupOK.ShowNewPopup($"{Util.CleanStringForXAML(versionID)} is currently being downloaded.", "Yourcraft Launcher");
                                 }
                             } 
                             catch (ArgumentNullException ex)
                             {
-                                PopupOK.ShowNewPopup($"Error reading {a}.\nThis JSON file does not contain a download URL at /downloads/client/url.\n\nError details:\n{ex.Message}", "DECRAFT");
+                                PopupOK.ShowNewPopup($"Error reading {a}.\nThis JSON file does not contain a download URL at /downloads/client/url.\n\nError details:\n{ex.Message}", "Yourcraft Launcher");
                             }
                             catch (Exception ex)
                             {
-                                PopupOK.ShowNewPopup($"Error reading {a}.\nThe JSON file may be invalid or not in a standard launcher format.\n\n{ex.Message}", "DECRAFT");
+                                PopupOK.ShowNewPopup($"Error reading {a}.\nThe JSON file may be invalid or not in a standard launcher format.\n\n{ex.Message}", "Yourcraft Launcher");
                             }
                         }
                         else if (a.EndsWith(".dat") || a.EndsWith(".nbt"))
@@ -530,11 +530,12 @@ namespace DeCraftLauncher
                                 NBTData.PrintNBT(nbtData.rootNode);
                             } catch (Exception ex)
                             {
-                                PopupOK.ShowNewPopup($"Error reading NBT data:\n {ex.Message}", "DECRAFT");
+                                PopupOK.ShowNewPopup($"Error reading NBT data:\n {ex.Message}", "Yourcraft Launcher");
                             }*/
-                        } else
+                        }
+                        else
                         {
-                            PopupOK.ShowNewPopup($"Unsupported file", "DECRAFT");
+                            PopupOK.ShowNewPopup($"Unsupported file", "Yourcraft Launcher");
                         }
                     }
                 }
@@ -544,7 +545,7 @@ namespace DeCraftLauncher
         protected override void OnClosing(CancelEventArgs e)
         {
             if (runningInstances.Count > 0 &&
-                PopupYesNo.ShowNewPopup("Some instances are still running.\nClosing DECRAFT will keep them open. Close anyway?", "DECRAFT") == MessageBoxResult.No)
+                PopupYesNo.ShowNewPopup("Some instances are still running.\nClosing Yourcraft Launcher will keep them open. Close anyway?", "Yourcraft Launcher") == MessageBoxResult.No)
             {
                 e.Cancel = true;
             }
@@ -573,7 +574,7 @@ namespace DeCraftLauncher
 
             currentlySelectedJar.jvmArgs = jvmargs.Text;
 
-            currentlySelectedJar.proxyHost = currentlySelectedJar.isServer ? tbox_server_proxyhost.Text : tbox_proxyhost.Text;
+            currentlySelectedJar.server_ip = currentlySelectedJar.isServer ? tbox_server_iip.Text : tbox_server_ip.Text;
             currentlySelectedJar.instanceDirName = currentlySelectedJar.isServer ? tbox_server_instance_dir.Text : tbox_instance_dir.Text;
 
             currentlySelectedJar.LWJGLVersion = combobox_lwjgl_version.Text;

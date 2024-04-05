@@ -68,9 +68,9 @@ namespace DeCraftLauncher
             //jvm args
             appletExec.jvmArgs.Add($"-Djava.library.path={relativePath}lwjgl/{(jar.LWJGLVersion == "+ built-in" ? "_temp_builtin" : jar.LWJGLVersion)}/native");
             appletExec.jvmArgs.Add(jar.jvmArgs);
-            if (jar.proxyHost != "")
+            if (jar.server_ip != "")
             {
-                appletExec.jvmArgs.Add($"-Dhttp.proxyHost={jar.proxyHost.Replace(" ", "%20")}");
+                appletExec.programArgs.Add($"--server {jar.server_ip.Replace(":", " --port ")}");
             }
             if (MainWindow.mainRTConfig.setHeapDump)
             {

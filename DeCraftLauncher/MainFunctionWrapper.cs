@@ -56,19 +56,17 @@ namespace DeCraftLauncher
             {
                 mainFunctionExec.classPath.Add($"{MainWindow.currentDirectory}/lwjgl/{jar.LWJGLVersion}/*");
             }
-
-            if (jar.proxyHost != "")
-            {
-                mainFunctionExec.jvmArgs.Add($"-Dhttp.proxyHost={jar.proxyHost.Replace(" ", "%20")}");
-            }
             mainFunctionExec.jvmArgs.Add($"-Djava.library.path=\"{MainWindow.currentDirectory}/lwjgl/{(jar.LWJGLVersion == "+ built-in" ? "_temp_builtin" : jar.LWJGLVersion)}/native\"");
             mainFunctionExec.jvmArgs.Add(jar.jvmArgs);
             if (jar.appletEmulateHTTP && MainWindow.mainRTConfig.isJava9)
             {
                 mainFunctionExec.jvmArgs.Add("--add-exports java.base/sun.net.www.protocol.http=ALL-UNNAMED");
             }
-
             mainFunctionExec.programArgs.Add($"\"{jar.playerName}\"");
+            if (jar.server_ip != "")
+            {
+                mainFunctionExec.programArgs.Add($"--server {jar.server_ip.Replace(":", " --port ")}");
+            }
             mainFunctionExec.programArgs.Add(jar.sessionID);
             mainFunctionExec.programArgs.Add(jar.gameArgs);
             Console.WriteLine("Running command: java " + mainFunctionExec.GetFullArgsString());
