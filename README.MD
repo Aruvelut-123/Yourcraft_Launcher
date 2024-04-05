@@ -3,7 +3,7 @@
 Modified launcher for Yourcraft.
 [Latest releases](https://github.com/Aruvelut-123/Yourcraft_Launcher/releases)
 
-![ui_image_1](md_img/ui_1.png)
+/**![ui_image_1](md_img/ui_1.png)**/
 
 ## Building
 
